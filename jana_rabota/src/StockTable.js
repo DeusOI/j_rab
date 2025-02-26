@@ -43,41 +43,36 @@ const StockTable = () => {
     const handleInputChange = (id, field, value) => {
         const updatedRows = rows.map((row) => {
             if (row.id === id) {
-                const updatedRow = { ...row, [field]: value };
+                const newValue = field === "item" ? value : Number(value);
+                const updatedRow = { ...row, [field]: newValue };
 
-                // Update startingStockPack and startingStockPiece logic
-                if (field === "startingStockPack") {
-                    updatedRow.startingStockPack = Number(value);
-                    updatedRow.startingStockPiece = updatedRow.startingStockPack * updatedRow.packageSize;
+                // When packageSize changes, adjust stock values
+                if (field === "packageSize") {
+                    updatedRow.startingStockPack = Math.floor(updatedRow.startingStockPiece / updatedRow.packageSize);
+                    updatedRow.returnedStockPack = Math.floor(updatedRow.returnedPieces / updatedRow.packageSize);
+                    updatedRow.soldStockPack = Math.floor(updatedRow.soldPieces / updatedRow.packageSize);
                 }
 
+                // Update starting stock calculations
+                if (field === "startingStockPack") {
+                    updatedRow.startingStockPiece = updatedRow.startingStockPack * updatedRow.packageSize;
+                }
                 if (field === "startingStockPiece") {
-                    updatedRow.startingStockPiece = Number(value);
                     updatedRow.startingStockPack = Math.floor(updatedRow.startingStockPiece / updatedRow.packageSize);
                 }
 
-                // Update returnedStockPack and returnedPieces logic
+                // Update returned stock calculations
                 if (field === "returnedStockPack") {
-                    updatedRow.returnedStockPack = Number(value);
                     updatedRow.returnedPieces = updatedRow.returnedStockPack * updatedRow.packageSize;
                 }
-
                 if (field === "returnedPieces") {
-                    updatedRow.returnedPieces = Number(value);
                     updatedRow.returnedStockPack = Math.floor(updatedRow.returnedPieces / updatedRow.packageSize);
                 }
 
-                // Calculate total starting stock in pieces
-                const totalStartingPieces = updatedRow.startingStockPiece || 0;
-
-                // Calculate total returned stock in pieces
-                const totalReturnedPieces = updatedRow.returnedPieces || 0;
-
                 // Calculate sold stock in pieces
-                const soldPieces = totalStartingPieces - totalReturnedPieces;
-                updatedRow.soldPieces = soldPieces > 0 ? soldPieces : 0;
-
-                // Calculate sold stock in packs
+                const totalStartingPieces = updatedRow.startingStockPiece || 0;
+                const totalReturnedPieces = updatedRow.returnedPieces || 0;
+                updatedRow.soldPieces = Math.max(0, totalStartingPieces - totalReturnedPieces);
                 updatedRow.soldStockPack = Math.floor(updatedRow.soldPieces / updatedRow.packageSize);
 
                 // Calculate total sales
@@ -90,6 +85,7 @@ const StockTable = () => {
 
         setRows(updatedRows);
     };
+
 
     // Calculate profit and equation for each item
     const calculateProfit = () => {
@@ -164,129 +160,142 @@ const StockTable = () => {
         XLSX.writeFile(wb, "stock_and_profit_data.xlsx");
     };
     return (
-        <div className="container mt-4">
+        <div className="container text-center mx-4 mt-4">
+
+
+            <div className="d-flex justify-content-center gap-5 mb-3 ">
+                <img src="./dfest_logo.svg" alt="dfest logo" className="img-fluid" style={{ maxHeight: "130px" }} />
+                <img src="./img1.png" alt="img1" className="img-fluid" style={{ maxHeight: "130px" }} />
+                <img src="./monkey.png" alt="monkey" className="img-fluid" style={{ maxHeight: "130px" }} />
+            </div>
+
+
             {/* Existing Stock Table */}
-            <table className="table table-striped table-bordered table-hover">
-                <thead>
-                    <tr style={{ fontWeight: "bold", fontSize: "1.05em", textAlign: "center", verticalAlign: "top" }}>
-                        <th>РОБА </th>
-                        <th>ПОЧЕТНА КОЛИЧИНА по пакет</th>
-                        <th>ПОЧЕТНА КОЛИЧИНА по парче / доза</th>
-                        <th>НАБАВНА ЦЕНА на парче без ДДВ</th>
-                        <th>ПРОДАЖНА ЦЕНА на парче со ДДВ</th>
-                        <th>ВРАТЕНА РОБА по пакет</th>
-                        <th>ВРАТЕНИ ПАРЧИЊА</th>
-                        <th>ПРОДАДЕНА РОБА по пакет</th>
-                        <th>ПРОДАДЕНА РОБА по парче / флаша</th>
-                        <th>ВКУПНО ПРОМЕТ</th>
-                        <th>ГОЛЕМИНА НА ПАКЕТ</th>
-                        <th>Акции</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {rows.map((row) => (
-                        <tr key={row.id}>
-                            <td>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    style={{ width: "160px" }}
-                                    value={row.item}
-                                    onChange={(e) =>
-                                        handleInputChange(row.id, "item", e.target.value)
-                                    }
-                                />
-                            </td>
-                            <td className="text-center">
-                                <input
-                                    type="number"
-                                    className="form-control text-center"
-                                    value={row.startingStockPack}
-                                    onChange={(e) =>
-                                        handleInputChange(row.id, "startingStockPack", e.target.value)
-                                    }
-                                />
-                            </td>
-                            <td className="text-center">
-                                <input
-                                    type="number"
-                                    className="form-control text-center"
-                                    value={row.startingStockPiece}
-                                    onChange={(e) =>
-                                        handleInputChange(row.id, "startingStockPiece", e.target.value)
-                                    }
-                                />
-                            </td>
-                            <td className="text-center">
-                                <input
-                                    type="number"
-                                    className="form-control text-center"
-                                    value={row.costPrice}
-                                    step="0.01"
-                                    onChange={(e) =>
-                                        handleInputChange(row.id, "costPrice", e.target.value)
-                                    }
-                                />
-                            </td>
-                            <td className="text-center">
-                                <input
-                                    type="number"
-                                    className="form-control text-center"
-                                    value={row.sellingPrice}
-                                    step="0.01"
-                                    onChange={(e) =>
-                                        handleInputChange(row.id, "sellingPrice", e.target.value)
-                                    }
-                                />
-                            </td>
-                            <td className="text-center">
-                                <input
-                                    type="number"
-                                    className="form-control text-center"
-                                    value={row.returnedStockPack}
-                                    onChange={(e) =>
-                                        handleInputChange(row.id, "returnedStockPack", e.target.value)
-                                    }
-                                />
-                            </td>
-                            <td className="text-center">
-                                <input
-                                    type="number"
-                                    className="form-control text-center"
-                                    value={row.returnedPieces}
-                                    onChange={(e) =>
-                                        handleInputChange(row.id, "returnedPieces", e.target.value)
-                                    }
-                                />
-                            </td>
-                            <td className="text-center">{row.soldStockPack}</td>
-                            <td className="text-center">{row.soldPieces}</td>
-                            <td className="text-center">{row.totalSales}</td>
-                            <td className="text-center">
-                                <input
-                                    type="number"
-                                    className="form-control text-center"
-                                    value={row.packageSize}
-                                    onChange={(e) =>
-                                        handleInputChange(row.id, "packageSize", e.target.value)
-                                    }
-                                />
-                            </td>
-                            <td className="text-center">
-                                <button
-                                    className="btn btn-danger"
-                                    onClick={() => deleteRow(row.id)}
-                                >
-                                    Избриши
-                                </button>
-                            </td>
+            <div>
+                <table className="table  table-striped table-bordered table-hover">
+                    <thead>
+                        <tr style={{ fontWeight: "bold", fontSize: "1.05em", textAlign: "center", verticalAlign: "top" }}>
+                            <th>РОБА </th>
+                            <th>ПОЧЕТНА КОЛИЧИНА по пакет</th>
+                            <th>ПОЧЕТНА КОЛИЧИНА по парче / доза</th>
+                            <th>НАБАВНА ЦЕНА на парче без ДДВ</th>
+                            <th>ПРОДАЖНА ЦЕНА на парче со ДДВ</th>
+                            <th>ВРАТЕНА РОБА по пакет</th>
+                            <th>ВРАТЕНИ ПАРЧИЊА</th>
+                            <th>ПРОДАДЕНА РОБА по пакет</th>
+                            <th>ПРОДАДЕНА РОБА по парче / флаша</th>
+                            <th>ВКУПНО ПРОМЕТ</th>
+                            <th>ГОЛЕМИНА НА ПАКЕТ</th>
+                            <th>Акции</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-            <button className="btn btn-primary" onClick={addRow}>
+                    </thead>
+                    <tbody>
+                        {rows.map((row) => (
+                            <tr key={row.id}>
+                                <td>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        style={{ width: "160px" }}
+                                        value={row.item}
+                                        onChange={(e) =>
+                                            handleInputChange(row.id, "item", e.target.value)
+                                        }
+                                    />
+                                </td>
+                                <td className="text-center">
+                                    <input
+                                        type="number"
+                                        className="form-control text-center"
+                                        value={row.startingStockPack}
+                                        onChange={(e) =>
+                                            handleInputChange(row.id, "startingStockPack", e.target.value)
+                                        }
+                                    />
+                                </td>
+                                <td className="text-center">
+                                    <input
+                                        type="number"
+                                        className="form-control text-center"
+                                        value={row.startingStockPiece}
+                                        onChange={(e) =>
+                                            handleInputChange(row.id, "startingStockPiece", e.target.value)
+                                        }
+                                    />
+                                </td>
+                                <td className="text-center">
+                                    <input
+                                        type="number"
+                                        className="form-control text-center"
+                                        value={row.costPrice}
+                                        step="0.01"
+                                        onChange={(e) =>
+                                            handleInputChange(row.id, "costPrice", e.target.value)
+                                        }
+                                    />
+                                </td>
+                                <td className="text-center">
+                                    <input
+                                        type="number"
+                                        className="form-control text-center"
+                                        value={row.sellingPrice}
+                                        step="1"
+                                        onChange={(e) =>
+                                            handleInputChange(row.id, "sellingPrice", e.target.value)
+                                        }
+                                    />
+                                </td>
+                                <td className="text-center">
+                                    <input
+                                        type="number"
+                                        className="form-control text-center"
+                                        value={row.returnedStockPack}
+                                        onChange={(e) =>
+                                            handleInputChange(row.id, "returnedStockPack", e.target.value)
+                                        }
+                                    />
+                                </td>
+                                <td className="text-center">
+                                    <input
+                                        type="number"
+                                        className="form-control text-center"
+                                        value={row.returnedPieces}
+                                        onChange={(e) =>
+                                            handleInputChange(row.id, "returnedPieces", e.target.value)
+                                        }
+                                    />
+                                </td>
+                                <td className="text-center">{row.soldStockPack}</td>
+                                <td className="text-center">{row.soldPieces}</td>
+                                <td className="text-center">{row.totalSales}</td>
+                                <td className="text-center">
+                                    <input
+                                        type="number"
+                                        className="form-control text-center"
+                                        value={row.packageSize}
+                                        onChange={(e) =>
+                                            handleInputChange(row.id, "packageSize", e.target.value)
+                                        }
+                                    />
+                                </td>
+                                <td className="text-center">
+                                    <button
+                                        className="btn btn-danger"
+                                        onClick={() => deleteRow(row.id)}
+                                    >
+                                        X
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+            <div className="d-flex justify-content-start">
+            <button style={{ width: "180px" }} className="btn btn-primary " onClick={addRow}>
                 Додади Ред
             </button>
+            </div>
 
 
 
@@ -316,9 +325,11 @@ const StockTable = () => {
                     </tr>
                 </tfoot>
             </table>
-            <button className="btn btn-success mt-3" onClick={exportToExcel}>
-                Извези како Excel
-            </button>
+            <div className="d-flex justify-content-end">
+                <button className="btn btn-success mt-3" onClick={exportToExcel}>
+                    Извези како Excel
+                </button>
+            </div>
 
         </div>
     );
