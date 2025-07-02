@@ -6,16 +6,31 @@ import * as XLSX from "xlsx";
 
 const StockTable = () => {
     const [rows, setRows] = useState([
-        { id: 1, item: "Rosa", startingStockPack: 0, startingStockPiece: 0, costPrice: 18.64, sellingPrice: 100, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 24 },
-        { id: 2, item: "Coca Cola", startingStockPack: 0, startingStockPiece: 0, costPrice: 24.92, sellingPrice: 100, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 24 },
-        { id: 3, item: "Coca Cola Zero", startingStockPack: 0, startingStockPiece: 0, costPrice: 24.92, sellingPrice: 100, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 24 },
-        { id: 4, item: "Skopsko", startingStockPack: 0, startingStockPiece: 0, costPrice: 33.41, sellingPrice: 100, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 24 },
-        { id: 5, item: "Skopsko Smooth", startingStockPack: 0, startingStockPiece: 0, costPrice: 33.41, sellingPrice: 100, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 24 },
-        { id: 6, item: "Johnny", startingStockPack: 0, startingStockPiece: 0, costPrice: 150, sellingPrice: 150, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 12 },
-        { id: 7, item: "Smirnoff", startingStockPack: 0, startingStockPiece: 0, costPrice: 150, sellingPrice: 150, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 12 },
-        { id: 8, item: "Gordons", startingStockPack: 0, startingStockPiece: 0, costPrice: 150, sellingPrice: 150, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 12 },
+        { id: 1, item: "Rosa", startingStockPack: 0, startingStockPiece: 0, costPrice: 29.20, sellingPrice: 50, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 24 },
+        { id: 2, item: "Coca Cola", startingStockPack: 0, startingStockPiece: 0, costPrice: 29.41, sellingPrice: 70, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 24 },
+        { id: 3, item: "Coca Cola Zero", startingStockPack: 0, startingStockPiece: 0, costPrice: 24.42, sellingPrice: 70, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 24 },
+        { id: 4, item: "Skopsko", startingStockPack: 0, startingStockPiece: 0, costPrice: 39.42, sellingPrice: 100, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 24 },
+        { id: 5, item: "Skopsko Smooth", startingStockPack: 0, startingStockPiece: 0, costPrice: 47, sellingPrice: 150, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 24 },
+        { id: 6, item: "Johnny", startingStockPack: 0, startingStockPiece: 0, costPrice: 48.33, sellingPrice: 150, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 288 },
+        { id: 7, item: "Smirnoff", startingStockPack: 0, startingStockPiece: 0, costPrice: 34.58, sellingPrice: 150, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 288 },
+        { id: 8, item: "Gordons", startingStockPack: 0, startingStockPiece: 0, costPrice: 41.25, sellingPrice: 150, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 288 },
+
         { id: 9, item: "Gordons+tonic", startingStockPack: 0, startingStockPiece: 0, costPrice: 200, sellingPrice: 200, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 24 },
-        { id: 10, item: "Tonic", startingStockPack: 0, startingStockPiece: 0, costPrice: 48.96, sellingPrice: 200, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 24 },
+        { id: 10, item: "Tonic", startingStockPack: 0, startingStockPiece: 0, costPrice: 5.77, sellingPrice: 50, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 60 },
+
+        { id: 11, item: "Schweps", startingStockPack: 0, startingStockPiece: 0, costPrice: 28.25, sellingPrice: 70, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 24 },
+        { id: 12, item: "Fuse Tea", startingStockPack: 0, startingStockPiece: 0, costPrice: 28.25, sellingPrice: 80, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 12 },
+        { id: 13, item: "Heineken", startingStockPack: 0, startingStockPiece: 0, costPrice: 48.13, sellingPrice: 150, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 24 },
+        { id: 14, item: "Red Bull", startingStockPack: 0, startingStockPiece: 0, costPrice: 77, sellingPrice: 100, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 24 },
+        { id: 15, item: "Captain Morgan", startingStockPack: 0, startingStockPiece: 0, costPrice: 48.12, sellingPrice: 150, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 96 },
+        { id: 16, item: "Sprite", startingStockPack: 0, startingStockPiece: 0, costPrice: 5.34, sellingPrice: 50, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 60 },
+        { id: 17, item: "Coca-Cola Golemo", startingStockPack: 0, startingStockPiece: 0, costPrice: 7.37, sellingPrice: 50, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 60 },
+
+        { id: 18, item: "Skopsko Toceno", startingStockPack: 0, startingStockPiece: 0, costPrice: 53.19, sellingPrice: 120, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 60 },
+        { id: 20, item: "Magic Basic Kikiriki", startingStockPack: 0, startingStockPiece: 0, costPrice: 40, sellingPrice: 100, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 14 },
+        { id: 21, item: "Magic Basic Bademi", startingStockPack: 0, startingStockPiece: 0, costPrice: 40, sellingPrice: 150, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 14 },
+        { id: 22, item: "Magic Basic Mix", startingStockPack: 0, startingStockPiece: 0, costPrice: 40, sellingPrice: 150, returnedStockPack: 0, returnedPieces: 0, soldStockPack: 0, soldPieces: 0, totalSales: 0, packageSize: 14 },
+
     ]);
 
     const addRow = () => {
@@ -292,9 +307,9 @@ const StockTable = () => {
                 </table>
             </div>
             <div className="d-flex justify-content-start">
-            <button style={{ width: "180px" }} className="btn btn-primary " onClick={addRow}>
-                Додади Ред
-            </button>
+                <button style={{ width: "180px" }} className="btn btn-primary " onClick={addRow}>
+                    Додади Ред
+                </button>
             </div>
 
 

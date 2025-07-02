@@ -2,8 +2,6 @@ open powershell
 
 cd ./OneDrive/Desktop/{path_to_build}
 
-install python
-
 python -m http.server 8000
 
 open in browser localhost:8000
